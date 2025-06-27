@@ -71,10 +71,21 @@ jobs:
         run: |
           git config --global user.email "aur@dataflare.app"
           git config --global user.name "dataflare-bot"
-      - name: Push to AUR
+      - name: Commit and push changes
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
-          git add PKGBUILD .SRCINFO LICENSE .gitignore
+          git add PKGBUILD .SRCINFO LICENSE
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "chore: update to ${{ steps.get_release.outputs.version }}"
+
+          # Push to GitHub first
+          git push origin master
+
+          # Then push to AUR
           git remote add aur ssh://aur@aur.archlinux.org/dataflare-appimage.git
+          git fetch aur master
+          git rebase aur/master
           git push aur master
