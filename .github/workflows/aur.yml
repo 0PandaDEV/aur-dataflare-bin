@@ -50,12 +50,16 @@ jobs:
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
           VERSION=${{ steps.get_release.outputs.version }}
+
+          # Update PKGBUILD
           sed -i "s/^pkgver=.*/pkgver=$VERSION/" PKGBUILD
-          sed -i "s/^pkgver =.*/pkgver = $VERSION/" .SRCINFO
           sed -i "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('$SHA_X86_64')/" PKGBUILD
-          sed -i "s/^sha256sums_x86_64 =.*/sha256sums_x86_64 = $SHA_X86_64/" .SRCINFO
           sed -i "s/^sha256sums_aarch64=.*/sha256sums_aarch64=('$SHA_AARCH64')/" PKGBUILD
-          sed -i "s/^sha256sums_aarch64 =.*/sha256sums_aarch64 = $SHA_AARCH64/" .SRCINFO
+
+          # Update .SRCINFO
+          sed -i "s/^[[:space:]]*pkgver = .*/\tpkgver = $VERSION/" .SRCINFO
+          sed -i "s/^[[:space:]]*sha256sums_x86_64 = .*/\tsha256sums_x86_64 = $SHA_X86_64/" .SRCINFO
+          sed -i "s/^[[:space:]]*sha256sums_aarch64 = .*/\tsha256sums_aarch64 = $SHA_AARCH64/" .SRCINFO
       - name: Commit and push to AUR
         if: steps.check_update.outputs.update_needed == 'true'
         uses: webfactory/ssh-agent@v0.7.0
