@@ -86,17 +86,21 @@ jobs:
           # Push to GitHub first
           git push origin master
 
-          # Prepare AUR-only version (without .github directory)
+          # Prepare AUR-only version using orphan branch
           git remote add aur ssh://aur@aur.archlinux.org/dataflare-appimage.git
-          git fetch aur master || true
 
-          # Create a temporary branch for AUR with only package files
-          git checkout -b aur-temp
-          git rm -rf .github
+          # Create orphan branch for AUR (no history)
+          git checkout --orphan aur-temp
+
+          # Remove all files from index but keep working directory
+          git rm -rf --cached .
+
+          # Add only package files
+          git add PKGBUILD .SRCINFO LICENSE
           git commit -m "chore: update to ${{ steps.get_release.outputs.version }}"
 
           # Push to AUR
-          git push aur aur-temp:master --force-with-lease
+          git push aur aur-temp:master --force
 
           # Return to master branch and clean up
           git checkout master
