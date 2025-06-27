@@ -1,0 +1,72 @@
+name: aur-auto-update
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get latest release
+        id: get_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const res = await github.rest.repos.getLatestRelease({
+              owner: 'DataflareApp',
+              repo: 'Dataflare'
+            });
+            core.setOutput('tag', res.data.tag_name);
+            core.setOutput('version', res.data.tag_name.replace(/^v/, ''));
+      - name: Check if update is needed
+        id: check_update
+        run: |
+          PKGVER=$(grep pkgver PKGBUILD | head -n1 | cut -d'=' -f2 | tr -d ' ')
+          echo "Current pkgver: $PKGVER"
+          echo "Latest version: ${{ steps.get_release.outputs.version }}"
+          if [ "$PKGVER" = "${{ steps.get_release.outputs.version }}" ]; then
+            echo "No update needed."
+            echo "::set-output name=update_needed::false"
+            exit 0
+          fi
+          echo "::set-output name=update_needed::true"
+      - name: Download AppImages and calculate sha256sums
+        if: steps.check_update.outputs.update_needed == 'true'
+        run: |
+          VERSION=${{ steps.get_release.outputs.version }}
+          wget -O Dataflare-x86_64.AppImage https://assets.dataflare.app/release/linux/x86_64/Dataflare.AppImage
+          wget -O Dataflare-aarch64.AppImage https://assets.dataflare.app/release/linux/aarch64/Dataflare.AppImage
+          SHA_X86_64=$(sha256sum Dataflare-x86_64.AppImage | awk '{print $1}')
+          SHA_AARCH64=$(sha256sum Dataflare-aarch64.AppImage | awk '{print $1}')
+          echo "SHA_X86_64=$SHA_X86_64" >> $GITHUB_ENV
+          echo "SHA_AARCH64=$SHA_AARCH64" >> $GITHUB_ENV
+      - name: Update PKGBUILD and .SRCINFO
+        if: steps.check_update.outputs.update_needed == 'true'
+        run: |
+          VERSION=${{ steps.get_release.outputs.version }}
+          sed -i "s/^pkgver=.*/pkgver=$VERSION/" PKGBUILD
+          sed -i "s/^pkgver =.*/pkgver = $VERSION/" .SRCINFO
+          sed -i "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('$SHA_X86_64')/" PKGBUILD
+          sed -i "s/^sha256sums_x86_64 =.*/sha256sums_x86_64 = $SHA_X86_64/" .SRCINFO
+          sed -i "s/^sha256sums_aarch64=.*/sha256sums_aarch64=('$SHA_AARCH64')/" PKGBUILD
+          sed -i "s/^sha256sums_aarch64 =.*/sha256sums_aarch64 = $SHA_AARCH64/" .SRCINFO
+      - name: Commit and push to AUR
+        if: steps.check_update.outputs.update_needed == 'true'
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+      - name: Set up Git
+        if: steps.check_update.outputs.update_needed == 'true'
+        run: |
+          git config --global user.email "aur@dataflare.app"
+          git config --global user.name "dataflare-bot"
+      - name: Push to AUR
+        if: steps.check_update.outputs.update_needed == 'true'
+        run: |
+          git add PKGBUILD .SRCINFO LICENSE
+          git commit -m "chore: update to ${{ steps.get_release.outputs.version }}"
+          git remote add aur ssh://aur@aur.archlinux.org/dataflare-appimage.git
+          git push aur master 
