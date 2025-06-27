@@ -8,8 +8,10 @@ on:
 jobs:
   check-update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get latest release
         id: get_release
         uses: actions/github-script@v7
@@ -69,8 +71,8 @@ jobs:
       - name: Set up Git
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
-          git config --global user.email "aur@dataflare.app"
-          git config --global user.name "dataflare-bot"
+          git config --global user.email "70103896+0PandaDEV@users.noreply.github.com"
+          git config --global user.name "0PandaDEV"
       - name: Commit and push changes
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
