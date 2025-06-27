@@ -1,0 +1,26 @@
+pkgbase = dataflare-bin
+	pkgdesc = Easily manage your Table, view Data, write SQL and run Query.
+	pkgver = 1.2.0
+	pkgrel = 1
+	url = https://dataflare.app/
+	arch = x86_64
+	arch = aarch64
+	license = private
+	depends = krb5
+	depends = hicolor-icon-theme
+	depends = cairo
+	depends = gdk-pixbuf2
+	depends = gtk3
+	depends = glibc
+	depends = libsoup
+	depends = gcc-libs
+	depends = webkit2gtk
+	depends = glib2
+	provides = dataflare
+	conflicts = dataflare
+	source_x86_64 = Dataflare-x86_64.AppImage::https://assets.dataflare.app/release/linux/x86_64/Dataflare.AppImage
+	sha256sums_x86_64 = 1e4e13e15e939718abfe23598afc0585440717b5bdc972977336e39985e6b41c
+	source_aarch64 = Dataflare-aarch64.AppImage::https://assets.dataflare.app/release/linux/aarch64/Dataflare.AppImage
+	sha256sums_aarch64 = 42464654a608398949af2b08d20fcf4138189dd4c893e7766872f79a2d467e1f
+
+pkgname = dataflare-bin
