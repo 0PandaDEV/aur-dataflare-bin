@@ -74,7 +74,7 @@ jobs:
       - name: Push to AUR
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
-          git add PKGBUILD .SRCINFO LICENSE
+          git add PKGBUILD .SRCINFO LICENSE .gitignore
           git commit -m "chore: update to ${{ steps.get_release.outputs.version }}"
           git remote add aur ssh://aur@aur.archlinux.org/dataflare-appimage.git
           git push aur master
