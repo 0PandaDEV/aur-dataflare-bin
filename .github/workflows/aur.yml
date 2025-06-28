@@ -91,7 +91,7 @@ jobs:
           git push origin master
 
           # Prepare AUR-only version working with existing history
-          git remote add aur ssh://aur@aur.archlinux.org/dataflare-appimage.git
+          git remote add aur ssh://aur@aur.archlinux.org/dataflare-bin.git
           git fetch aur master
 
           # Create branch based on AUR history

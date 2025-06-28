@@ -1,5 +1,5 @@
 # Maintainer: PandaDEV <contact@pandadev.net>
-pkgname=dataflare-appimage
+pkgname=dataflare-bin
 pkgver=2.1.0
 pkgrel=1
 pkgdesc="Easily manage your Table, view Data, write SQL and run Query."
