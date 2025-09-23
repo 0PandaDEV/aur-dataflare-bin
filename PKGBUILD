@@ -12,8 +12,8 @@ provides=(dataflare)
 conflicts=(dataflare)
 source_x86_64=("Dataflare-x86_64.AppImage::https://assets.dataflare.app/release/linux/x86_64/Dataflare.AppImage")
 source_aarch64=("Dataflare-aarch64.AppImage::https://assets.dataflare.app/release/linux/aarch64/Dataflare.AppImage")
-sha256sums_x86_64=('0c25b4b20a1c448f267480500800574e1710c2cd754f1fdacf28b7d0514a70ff')
-sha256sums_aarch64=('61e8f4ad5a55f30ecb1131963fda2d7134c2adfc51b1cfb81860c33c92110c3d')
+sha256sums_x86_64=('')
+sha256sums_aarch64=('')
 
 package() {
 	install -Dm755 *.AppImage "$pkgdir/opt/dataflare/dataflare.appimage"
