@@ -80,7 +80,7 @@ jobs:
       - name: Commit and push changes
         if: steps.check_update.outputs.update_needed == 'true'
         run: |
-          git add PKGBUILD .SRCINFO LICENSE
+          git add PKGBUILD .SRCINFO
           if git diff --staged --quiet; then
             echo "No changes to commit"
             exit 0
@@ -98,7 +98,7 @@ jobs:
           git checkout -b aur-temp aur/master
 
           # Update files to match our version
-          git checkout master -- PKGBUILD .SRCINFO LICENSE
+          git checkout master -- PKGBUILD .SRCINFO
 
           # Remove .github directory if it exists in AUR
           if [ -d ".github" ]; then
@@ -106,7 +106,7 @@ jobs:
           fi
 
           # Commit the changes
-          git add PKGBUILD .SRCINFO LICENSE
+          git add PKGBUILD .SRCINFO
           git commit -m "chore: update to ${{ steps.get_release.outputs.version }}"
 
           # Push to AUR
