@@ -1,6 +1,6 @@
 # Maintainer: PandaDEV <contact@pandadev.net>
 pkgname=dataflare-bin
-pkgver=2.10.2
+pkgver=2.1
 pkgrel=1
 pkgdesc="Easily manage your Table, view Data, write SQL and run Query."
 arch=(x86_64 aarch64)
@@ -12,7 +12,7 @@ provides=(dataflare)
 conflicts=(dataflare)
 source_x86_64=("Dataflare-x86_64.AppImage::https://assets.dataflare.app/release/linux/x86_64/Dataflare.AppImage")
 source_aarch64=("Dataflare-aarch64.AppImage::https://assets.dataflare.app/release/linux/aarch64/Dataflare.AppImage")
-sha256sums_x86_64=('b4f4e762965d2cefcbf343eeac1f2a3cf7cb142ba18cb8877c8bfec8647e8269')
+sha256sums_x86_64=('dfgsdfgsd')
 sha256sums_aarch64=('b1f27c6fa15ce4a04cf93112ab5a40570fd88f237d8674257db274c998d0d55d')
 
 package() {
