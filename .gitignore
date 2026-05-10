@@ -2,3 +2,4 @@ Dataflare-aarch64.AppImage
 Dataflare-x86_64.AppImage
 pkg/
 src/
+.DS_Store
